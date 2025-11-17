@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registration Success</title>
+  <style>
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:#0f1724;
+      color:white;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      text-align:center;
+      flex-direction:column;
+    }
+    .box{
+      background:#0b1220;
+      padding:30px 40px;
+      border-radius:12px;
+      box-shadow:0 0 30px rgba(255,255,255,0.1);
+    }
+    h2{ color:#10b981; margin-bottom:10px; }
+    p{ color:#cbd5e1; margin:6px 0; }
+    a{
+      margin-top:18px;
+      display:inline-block;
+      text-decoration:none;
+      color:white;
+      background:#3b82f6;
+      padding:10px 18px;
+      border-radius:8px;
+    }
+    a:hover{ background:#2563eb; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>✅ Patient Registered Successfully!</h2>
+    <p>Welcome, <b>{{ name }}</b></p>
+    <p>🆔 <b>Your Patient ID:</b> {{ patient_id }}</p>
+    <a href="/">🏠 Back to Home</a>
+  </div>
+</body>
+</html>

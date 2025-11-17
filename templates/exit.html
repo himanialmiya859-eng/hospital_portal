@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visitor Exit</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0d1524;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+        }
+        video, canvas {
+            margin-top: 20px;
+            width: 320px;
+            height: 240px;
+            border: 2px solid white;
+            border-radius: 10px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #00bcd4;
+            border: none;
+            color: white;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 22px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Visitor Exit Verification</h1>
+
+    <video id="camera" autoplay></video>
+    <canvas id="snapshot" style="display:none;"></canvas>
+
+    <br>
+    <button onclick="captureFace()">Capture & Verify</button>
+
+    <h2 id="result"></h2>
+
+    <script>
+        const video = document.getElementById("camera");
+        const canvas = document.getElementById("snapshot");
+        const result = document.getElementById("result");
+
+        // Start Camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => video.srcObject = stream)
+            .catch(err => alert("Camera not found"));
+
+        function captureFace() {
+            canvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
+
+            let imageBase64 = canvas.toDataURL("image/png");
+
+            fetch("/verify_exit_face", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ face: imageBase64 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.match) {
+                    result.style.color = "lightgreen";
+                    result.innerHTML = "Exit Successful ✔";
+                } else {
+                    result.style.color = "red";
+                    result.innerHTML = "Face Not Detected, Please Try Again ❌";
+                }
+            })
+            .catch(err => alert("Error: " + err));
+        }
+    </script>
+
+</body>
+</html>

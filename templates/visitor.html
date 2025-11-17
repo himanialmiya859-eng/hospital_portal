@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visitor Registration</title>
+<style>
+  body{
+    margin:0;
+    font-family:Arial;
+    background:#0f1724;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+  }
+  .form-box{
+    background:#0b1220;
+    padding:30px;
+    border-radius:12px;
+    width:100%;
+    max-width:380px;
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
+    text-align:center;
+  }
+  input, select, button{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:none;
+    border-radius:8px;
+    font-size:15px;
+  }
+  button{
+    background:#3b82f6;
+    color:white;
+    cursor:pointer;
+  }
+  button:hover{background:#2563eb;}
+
+  /* 📷 Small size camera preview */
+  video, canvas{
+    width:240px;
+    max-width:100%;
+    border-radius:8px;
+    margin-top:10px;
+  }
+
+  #pid_status{
+    font-size:14px;
+    display:block;
+  }
+
+  /* 🔙 Back to Home button at bottom */
+  .back-home{
+    display:block;
+    margin-top:15px;
+    font-size:14px;
+    color:#3b82f6;
+    text-decoration:none;
+  }
+  .back-home:hover{
+    color:#60a5fa;
+  }
+</style>
+</head>
+<body>
+<div class="form-box">
+
+  <h2>Visitor Registration</h2>
+
+  <form id="visitorForm">
+
+    <input type="text" name="name" placeholder="Full Name" required pattern="[A-Za-z\s]+">
+
+    <input type="tel" id="phone" name="phone" maxlength="10" pattern="[0-9]{10}" placeholder="Phone Number" required>
+
+    <input type="text" id="patient_id" name="patient_id" maxlength="8" placeholder="Enter Patient ID" required>
+    <span id="pid_status"></span>
+
+    <select name="ward" required>
+      <option value="">Select Ward</option>
+      <option value="General">General</option>
+      <option value="ICU">ICU</option>
+      <option value="Emergency">Emergency</option>
+    </select>
+
+    <p>📷 Capture Visitor Face</p>
+
+    <video id="camera" autoplay></video>
+    <canvas id="snapshot" style="display:none;"></canvas>
+
+    <button type="button" id="captureBtn">Capture Face</button>
+
+    <input type="hidden" id="visitor_image" name="visitor_image">
+
+    <button type="submit">Register Visitor</button>
+  </form>
+
+  <!-- 🔙 Back to Home at bottom -->
+  <a href="/" class="back-home">⬅ Back to Home</a>
+
+</div>
+
+<script>
+// Validate Patient ID
+document.getElementById("patient_id").addEventListener("input", function() {
+  const pid = this.value.trim();
+  const status = document.getElementById("pid_status");
+
+  if (pid.length < 8) {
+    status.textContent = "Invalid ID (must be 8 chars)";
+    status.style.color = "red";
+    return;
+  }
+
+  fetch(`/check_patient/${pid}`)
+  .then(res => res.json())
+  .then(data => {
+    if (data.exists) {
+      status.textContent = "✅ Valid Patient ID";
+      status.style.color = "lime";
+    } else {
+      status.textContent = "❌ Not Found";
+      status.style.color = "red";
+    }
+  });
+});
+
+// Allow only digits in phone
+document.getElementById("phone").addEventListener("input", function() {
+  this.value = this.value.replace(/[^0-9]/g, "");
+});
+
+// Camera setup
+const video = document.getElementById("camera");
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => video.srcObject = stream)
+  .catch(() => alert("Camera access denied! ❌"));
+
+// Capture face
+document.getElementById("captureBtn").addEventListener("click", function() {
+  const canvas = document.getElementById("snapshot");
+  const context = canvas.getContext("2d");
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  const imgData = canvas.toDataURL("image/jpeg");
+  document.getElementById("visitor_image").value = imgData;
+
+  alert("✅ Face captured!");
+});
+
+// Submit Form
+document.getElementById("visitorForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+
+  const res = await fetch("/register_visitor", { method: "POST", body: formData });
+  const data = await res.json();
+
+  if (data.success) {
+    alert(data.message);
+    this.reset();
+  } else {
+    alert("❌ Error: " + data.error);
+  }
+});
+</script>
+</body>
+</html>

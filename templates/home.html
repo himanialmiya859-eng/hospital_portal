@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hospital Interface — 4 Big Buttons</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --glass: rgba(255,255,255,0.04);
+      --accent1: linear-gradient(135deg,#06b6d4,#3b82f6);
+      --accent2: linear-gradient(135deg,#f97316,#ef4444);
+      --accent3: linear-gradient(135deg,#34d399,#10b981);
+      --accent4: linear-gradient(135deg,#f59e0b,#f97316);
+      --muted: #9aa4b2;
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(59,130,246,0.08), transparent 8%),
+                  radial-gradient(1000px 500px at 90% 90%, rgba(16,185,129,0.05), transparent 6%),
+                  var(--bg);
+      color: #e6eef6;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+    }
+
+    .container{
+      width:100%;
+      max-width:1100px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border-radius:20px;
+      padding:28px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:24px;
+      align-items:center;
+    }
+    .left{padding:18px 12px;}
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+    .logo{width:56px;height:56px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:var(--muted);}
+    h1{margin:0;font-size:26px;}
+    p.lead{color:var(--muted);margin:8px 0 20px;}
+    .grid-buttons{display:grid;grid-template-columns: repeat(2,1fr);gap:16px;}
+    .btn-card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:16px;
+      padding:26px;
+      display:flex;flex-direction:column;gap:12px;align-items:flex-start;
+      min-height:140px;
+      transition:transform .22s ease, box-shadow .22s ease;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .btn-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(2,6,23,0.6);}
+    .btn-top{display:flex;align-items:center;gap:12px;width:100%;}
+    .icon-wrap{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:white;}
+    .btn-title{font-weight:700;font-size:18px;}
+    .btn-sub{color:var(--muted);font-size:13px;}
+    .right{
+      padding:22px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      border:1px solid rgba(255,255,255,0.02);height:100%;display:flex;flex-direction:column;gap:12px;justify-content:center
+    }
+    .accent-1 .icon-wrap{background:var(--accent1);}
+    .accent-2 .icon-wrap{background:var(--accent2);}
+    .accent-3 .icon-wrap{background:var(--accent3);}
+    .accent-4 .icon-wrap{background:var(--accent4);}
+    .big-btn{
+      margin-top:auto;width:100%;padding:14px 18px;border-radius:12px;font-weight:700;font-size:16px;text-align:center;
+      background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);cursor:pointer
+    }
+    @media (max-width:980px){
+      .container{grid-template-columns:1fr; padding:20px}
+      .right{order:3}
+      .left{order:1}
+    }
+    @media (max-width:560px){
+      .grid-buttons{grid-template-columns:1fr;}
+      .btn-card{min-height:120px;padding:18px}
+      .logo{width:48px;height:48px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <div class="brand">
+        <div class="logo">H+</div>
+        <div>
+          <h1>Hospital Portal</h1>
+          <p class="lead">Choose your role to continue.</p>
+        </div>
+      </div>
+
+      <div class="grid-buttons">
+        <!-- Hospital Staff -->
+        <div class="btn-card accent-1">
+          <div class="btn-top">
+            <div class="icon-wrap">👨‍⚕️</div>
+            <div>
+              <div class="btn-title">Hospital Staff</div>
+              <div class="btn-sub">Doctors, Nurses, Admin</div>
+            </div>
+          </div>
+          <button class="big-btn" onclick="window.location.href='/staff'">OPEN STAFF PANEL</button>
+        </div>
+
+        <!-- Patient -->
+        <div class="btn-card accent-2">
+          <div class="btn-top">
+            <div class="icon-wrap">🧑‍⚕️</div>
+            <div>
+              <div class="btn-title">Patient</div>
+              <div class="btn-sub">Patient Registration</div>
+            </div>
+          </div>
+          <button class="big-btn" onclick="window.location.href='/patient'">OPEN PATIENT PORTAL</button>
+        </div>
+
+        <!-- Visitors -->
+        <div class="btn-card accent-3">
+          <div class="btn-top">
+            <div class="icon-wrap">🧍‍♂️</div>
+            <div>
+              <div class="btn-title">Visitors</div>
+              <div class="btn-sub">Guest registration & visiting hours</div>
+            </div>
+          </div>
+          <button class="big-btn" onclick="window.location.href='/visitor'">VISITOR INFO</button>
+        </div>
+
+        <!-- Exit -->
+        <div class="btn-card accent-4">
+          <div class="btn-top">
+            <div class="icon-wrap">🚪</div>
+            <div>
+              <div class="btn-title">Exit</div>
+              <div class="btn-sub">Close or Exit</div>
+            </div>
+          </div>
+          <button class="big-btn" onclick="window.location.href='/exit'">EXIT</button>
+        </div>
+      </div>
+    </div>
+
+    <aside class="right">
+      <h2>Quick info</h2>
+      <p>Welcome to the Hospital Management Portal — designed to simplify patient registration, staff coordination, and visitor tracking.</p>
+      <p>This system helps manage hospital resources efficiently, offering a unified platform for doctors, nurses, patients, and visitors.</p>
+    </aside>
+  </div>
+
+  <script>
+    function exitAction(){
+      window.location.href = '/';
+    }
+  </script>
+</body>
+</html>

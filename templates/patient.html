@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Registration</title>
+<style>
+  body{
+    margin:0;
+    font-family:Arial;
+    background:#0f1724;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:15px;
+    box-sizing:border-box;
+  }
+  .form-box{
+    background:#0b1220;
+    padding:30px;
+    border-radius:12px;
+    width:100%;
+    max-width:380px;
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
+    text-align:center;
+  }
+  h2{margin-bottom:15px;}
+  input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:8px;
+    font-size:15px;
+    box-sizing:border-box;
+  }
+  button{
+    width:100%;
+    background:#3b82f6;
+    padding:12px;
+    border:none;
+    font-size:16px;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:5px;
+  }
+  button:hover{background:#2563eb;}
+  .back-btn{
+    display:block;
+    text-align:center;
+    margin-top:12px;
+    color:#38bdf8;
+    text-decoration:none;
+    font-size:15px;
+  }
+</style>
+</head>
+<body>
+<div class="form-box">
+  <h2>Patient Registration</h2>
+  <form action="/register" method="POST" enctype="multipart/form-data">
+    
+    <!-- ✅ Name: Only alphabets and spaces allowed -->
+    <input type="text" name="fullname" id="fullname"
+           placeholder="Full Name" required
+           pattern="[A-Za-z\s]+"
+           title="Only letters and spaces allowed">
+
+    <!-- Email with validation -->
+    <input type="email" name="email" placeholder="Email Address" required>
+
+    <!-- Phone: Only numbers (10 digits) -->
+    <input type="tel" name="phone" maxlength="10" pattern="[0-9]{10}"
+           placeholder="Phone Number (10 digits)" required>
+
+    <!-- Aadhaar: Only numbers (12 digits) -->
+    <input type="text" name="aadhaar" maxlength="12" pattern="[0-9]{12}"
+           placeholder="Aadhaar Number (12 digits)" required>
+
+    <!-- Image Upload -->
+    <input type="file" name="image" accept="image/*">
+
+    <button type="submit">Register Patient</button>
+  </form>
+  <a href="/" class="back-btn">⬅ Back to Home</a>
+</div>
+
+<script>
+  // ✅ Prevent numbers in the name field (live validation)
+  const nameInput = document.getElementById('fullname');
+  nameInput.addEventListener('input', function() {
+    this.value = this.value.replace(/[^A-Za-z\s]/g, '');
+  });
+</script>
+</body>
+</html>
