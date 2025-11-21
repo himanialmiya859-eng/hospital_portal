@@ -76,7 +76,7 @@
 
     <input type="tel" id="phone" name="phone" maxlength="10" pattern="[0-9]{10}" placeholder="Phone Number" required>
 
-    <input type="text" id="patient_id" name="patient_id" maxlength="8" placeholder="Enter Patient ID" required>
+    <input type="text" id="patient_id" name="patient_id" maxlength="8" placeholder="Enter Patient ID" oninput="this.value=this.value.replace(/\s/g,'')"required>
     <span id="pid_status"></span>
 
     <select name="ward" required>
@@ -106,14 +106,14 @@
 <script>
 // Validate Patient ID
 document.getElementById("patient_id").addEventListener("input", function() {
-  const pid = this.value.trim();
+  const pid = this.value.replace(/\s+/g, "");
   const status = document.getElementById("pid_status");
 
-  if (pid.length < 8) {
+  if (pid.length !== 8) {
     status.textContent = "Invalid ID (must be 8 chars)";
     status.style.color = "red";
     return;
-  }
+}
 
   fetch(`/check_patient/${pid}`)
   .then(res => res.json())

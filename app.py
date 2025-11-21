@@ -8,7 +8,6 @@ import cv2
 import face_recognition
 import numpy as np
 
-
 # ---------------------------
 # Flask App Initialization
 # ---------------------------
@@ -87,8 +86,8 @@ def register_patient():
         # Email Sending
         # ---------------------------
         try:
-            sender_email = "hospital.portal.000@gmail.com"          # ⭐ YOUR GMAIL
-            app_password = "havq logd tyel uvmz"               # ⭐ YOUR APP PASSWORD
+            sender_email = "hospital.portal.000@gmail.com"
+            app_password = "havq logd tyel uvmz"
             receiver_email = email
 
             subject = "Your Patient ID - Hospital Registration"
@@ -112,12 +111,9 @@ Hospital Team
             message["Subject"] = subject
             message.attach(MIMEText(body, "plain"))
 
-            # Email send via Gmail SMTP
             with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
                 server.login(sender_email, app_password)
                 server.send_message(message)
-
-            print("Email Sent Successfully")
 
         except Exception as e:
             print("Email Error:", e)
@@ -140,20 +136,17 @@ def register_visitor():
         ward = request.form["ward"]
         image_data = request.form["visitor_image"]
 
-        # Base64 image check
         if not image_data.startswith("data:image"):
             return jsonify({"success": False, "error": "Invalid image data"})
 
         image_data = re.sub('^data:image/.+;base64,', '', image_data)
         image_bytes = base64.b64decode(image_data)
 
-        # Save image
         filename = f"{name}_{phone}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
         image_path = os.path.join(VISITORS_FOLDER, filename)
         with open(image_path, "wb") as f:
             f.write(image_bytes)
 
-        # Database insert
         cursor.execute("""
             INSERT INTO visitors (name, phone, patient_id, ward, image_path)
             VALUES (%s, %s, %s, %s, %s)
@@ -178,7 +171,6 @@ def check_patient(pid):
     patient = cursor.fetchone()
     return jsonify({"exists": bool(patient)})
 
-
 @app.route("/check")
 def check():
     return render_template("check_patient.html")
@@ -193,22 +185,18 @@ def verify_exit_face():
         data = request.get_json()
         face_base64 = data["face"]
 
-        # Base64 remove prefix
         face_base64 = re.sub('^data:image/.+;base64,', '', face_base64)
         face_bytes = base64.b64decode(face_base64)
 
-        # Convert to array
         np_img = np.frombuffer(face_bytes, np.uint8)
         frame = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
 
-        # Face encoding from live camera
         live_face = face_recognition.face_encodings(frame)
         if len(live_face) == 0:
             return jsonify({"match": False})
 
         live_encoding = live_face[0]
 
-        # Compare with visitor images in folder
         for file in os.listdir(VISITORS_FOLDER):
             file_path = os.path.join(VISITORS_FOLDER, file)
             known_img = face_recognition.load_image_file(file_path)
@@ -218,8 +206,6 @@ def verify_exit_face():
                 continue
 
             known_encoding = known_faces[0]
-
-            # Compare Faces
             match = face_recognition.compare_faces([known_encoding], live_encoding)[0]
 
             if match:
@@ -229,6 +215,30 @@ def verify_exit_face():
 
     except Exception as e:
         return jsonify({"match": False, "error": str(e)})
+
+
+# ---------------------------
+# Patients API (For Staff Dashboard)
+# ---------------------------
+@app.route("/patients")
+def get_patients():
+    cursor.execute("SELECT * FROM patients")
+    data = cursor.fetchall()
+    return jsonify(data)
+
+@app.route("/staff")
+def staff_login():
+    return render_template("staff.html")
+
+
+
+
+# ---------------------------
+# Staff Dashboard
+# ---------------------------
+@app.route("/dashboard")
+def dashboard():
+    return render_template("staff_dashboard.html")
 
 
 # ---------------------------

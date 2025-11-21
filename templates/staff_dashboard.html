@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Staff Dashboard</title>
+    <style>
+        body { background:#0d1524; color:white; font-family:Arial; padding:20px; }
+        table { width:100%; border-collapse:collapse; margin-top:20px; }
+        th, td { padding:12px; border:1px solid #444; text-align:left; }
+        th { background:#1a2333; }
+    </style>
+</head>
+
+<body>
+
+<h2>Registered Patients</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+
+    <tbody id="patientTable"></tbody>
+</table>
+
+<script>
+function loadPatients() {
+    fetch("/patients")
+        .then(res => res.json())
+        .then(data => {
+            let table = document.getElementById("patientTable");
+            table.innerHTML = "";
+
+            data.forEach(p => {
+                table.innerHTML += `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td>${p.name}</td>
+                        <td>${p.phone}</td>
+                        <td>${p.age}</td>
+                    </tr>
+                `;
+            });
+        });
+}
+
+loadPatients();
+</script>
+
+</body>
+</html>

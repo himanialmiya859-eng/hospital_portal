@@ -27,6 +27,18 @@
             border-radius: 8px;
             cursor: pointer;
         }
+        #back-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #3b82f6;
+            border: none;
+            color: white;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        #back-btn:hover { background: #2563eb; }
+
         #result {
             margin-top: 20px;
             font-size: 22px;
@@ -42,6 +54,9 @@
 
     <br>
     <button onclick="captureFace()">Capture & Verify</button>
+
+    <!-- ✅ BACK TO HOME BUTTON -->
+    <button id="back-btn" onclick="goHome()">⬅ Back to Home</button>
 
     <h2 id="result"></h2>
 
@@ -70,12 +85,23 @@
                 if (data.match) {
                     result.style.color = "lightgreen";
                     result.innerHTML = "Exit Successful ✔";
+
+                    // Auto redirect after 1.5 sec
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 1500);
+
                 } else {
                     result.style.color = "red";
                     result.innerHTML = "Face Not Detected, Please Try Again ❌";
                 }
             })
             .catch(err => alert("Error: " + err));
+        }
+
+        // Back to Home Function
+        function goHome() {
+            window.location.href = "/";
         }
     </script>
 
